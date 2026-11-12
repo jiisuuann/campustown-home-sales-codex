@@ -8,7 +8,33 @@ const townKey = row => `${row.city}, ${row.state}`;
 const validPrice = row => row.sale_price !== '' && Number.isFinite(Number(row.sale_price)) && Number(row.sale_price) >= 1000;
 const bands = [1000,250000,500000,750000,1000000,1500000,2000000,Infinity];
 const bandLabels = ['$1k–<250k','$250k–<500k','$500k–<750k','$750k–<1m','$1m–<1.5m','$1.5m–<2m','$2m+'];
-let rows=[], towns=[], map, zoom, markers;
+let rows=[], towns=[], map, zoom, markers, statePaths, projection;
+// State names join the dataset's postal codes to the bundled map geometry.
+const stateNames = {CA:'California', FL:'Florida', GA:'Georgia', IL:'Illinois',
+  IN:'Indiana', IA:'Iowa', MI:'Michigan', NC:'North Carolina',
+  PA:'Pennsylvania', VA:'Virginia', WI:'Wisconsin'};
+function moveMap(transform) {
+  map.interrupt().transition()
+    .duration(window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 550)
+    .call(zoom.transform,transform);
+}
+function focusMap(active) {
+  const focused=Boolean(selection.city || selection.campus);
+  const selectedTowns=focused ? towns.filter(t=>active.has(t.key)) : [];
+  const states=new Set(selectedTowns.map(t=>stateNames[t.state]));
+  statePaths.classed('state-selected',feature=>states.has(feature.properties.name));
+  if(!selectedTowns.length) { moveMap(d3.zoomIdentity); return; }
+  const points=selectedTowns.map(t=>projection(t.coordinates));
+  const [x0,x1]=d3.extent(points,p=>p[0]), [y0,y1]=d3.extent(points,p=>p[1]);
+  // Fit all town centers with generous padding; cap automatic zoom separately
+  // from manual zoom. A city gets a closer view than its campus area.
+  const width=960, height=570, padding=100;
+  const scale=Math.max(1,Math.min(selection.city ? 14 : 10,
+    (width-2*padding)/Math.max(x1-x0,1),
+    (height-2*padding)/Math.max(y1-y0,1)));
+  moveMap(d3.zoomIdentity.translate(width/2,height/2).scale(scale)
+    .translate(-(x0+x1)/2,-(y0+y1)/2));
+}
 function selectedRows() {
   return rows.filter(r => (!selection.campus || r.university === selection.campus) && (!selection.city || townKey(r) === selection.city));
 }
@@ -20,10 +46,10 @@ function selectTown(town) {
 }
 function drawMap(topology) {
   const features=topojson.feature(topology,topology.objects.states);
-  const projection=d3.geoAlbersUsa().fitExtent([[25,30],[935,525]],features);
+  projection=d3.geoAlbersUsa().fitExtent([[25,30],[935,525]],features);
   map=d3.select('#map');
   const layer=map.append('g');
-  layer.selectAll('path').data(features.features).join('path').attr('class','state').attr('d',d3.geoPath(projection));
+  statePaths=layer.selectAll('path').data(features.features).join('path').attr('class','state').attr('d',d3.geoPath(projection));
   markers=layer.selectAll('circle').data(towns).join('circle')
     .attr('class','marker').attr('cx',t=>projection(t.coordinates)[0]).attr('cy',t=>projection(t.coordinates)[1])
     .attr('r',6).attr('tabindex',0).attr('role','button').attr('aria-label',t=>`Select ${t.key}`)
@@ -38,9 +64,9 @@ function drawMap(topology) {
   });
   map.call(zoom).on('dblclick.zoom',null);
   new ResizeObserver(()=>markers.attr('r',Math.max(6,5*960/$('map').clientWidth)/d3.zoomTransform(map.node()).k)).observe($('map'));
-  $('zoom-in').onclick=()=>map.transition().duration(200).call(zoom.scaleBy,2);
-  $('zoom-out').onclick=()=>map.transition().duration(200).call(zoom.scaleBy,.5);
-  $('map-reset').onclick=()=>map.transition().duration(250).call(zoom.transform,d3.zoomIdentity);
+  $('zoom-in').onclick=()=>map.interrupt().transition().duration(200).call(zoom.scaleBy,2);
+  $('zoom-out').onclick=()=>map.interrupt().transition().duration(200).call(zoom.scaleBy,.5);
+  $('map-reset').onclick=()=>moveMap(d3.zoomIdentity);
 }
 function drawDistribution(prices) {
   const values=bandLabels.map((label,i)=>({label,n:prices.filter(p=>p>=bands[i]&&p<bands[i+1]).length}));
@@ -86,6 +112,7 @@ function render() {
     b.append(document.createTextNode(t.city));const s=document.createElement('span');s.textContent=t.state;b.append(s);b.onclick=()=>selectTown(t);return b;
   }));
   drawDistribution(prices);
+  focusMap(active);
 }
 async function init() {
   try {
@@ -102,7 +129,7 @@ async function init() {
     drawMap(await mapResponse.json());
     $('campus').onchange=()=>{selection.campus=$('campus').value;selection.city='';render();};
     $('city').onchange=()=>{const town=towns.find(t=>t.key===$('city').value);if(town)selectTown(town);else{selection.city='';render();}};
-    $('reset').onclick=()=>{selection.campus='';selection.city='';render();map.call(zoom.transform,d3.zoomIdentity);};
+    $('reset').onclick=()=>{selection.campus='';selection.city='';render();};
     render();
     ['campus','city','reset'].forEach(id=>$(id).disabled=false);
     $('status').textContent='';

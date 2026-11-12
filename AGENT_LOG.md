@@ -92,3 +92,47 @@ If access is still denied, report the exact error and stop without repeated retr
 
 - **Agent produced:** Published the existing development branch and opened PR #1 targeting main. Preserved the website and original commits; appended publication records in a new documentation commit.
 - **Checked or changed:** Git push succeeded on its first retry. GitHub confirmed https://github.com/jiisuuann/campustown-home-sales-codex/pull/1 is open and unmerged. No implementation tests rerun; no merge or deployment performed.
+
+## 2026-11-12: State highlighting and automatic map navigation
+
+**Asked (exact prompt):**
+
+```text
+Please enhance the existing geographic map with **state highlighting and automatic zoom-to-selection**.
+
+The current map, campus/city dropdown synchronization, and analytical results are working well. Preserve the existing implementation and visual design.
+
+### Requirements
+
+1. **State highlighting**
+   - When a city or university is selected, highlight the corresponding U.S. state on the map.
+   - Use a subtle fill color or outline that remains visually consistent with the existing dashboard.
+   - Restore the default state appearance when the selection is cleared.
+2. **Automatic zoom and pan**
+   - When a university is selected, smoothly zoom and pan to the area containing all associated college towns.
+   - When an individual city is selected, zoom closer to that city while keeping its marker clearly visible.
+   - If multiple towns belong to the selected university, ensure all relevant markers remain visible with appropriate padding.
+   - Avoid excessive zoom levels that make nearby towns difficult to distinguish.
+3. **Bidirectional behavior**
+   - Apply the same map highlighting and automatic zoom whether a location is selected by clicking a map marker, using the city dropdown, or using the university dropdown.
+   - Preserve the existing synchronization between map selections, dropdowns, charts, and numerical results.
+4. **Reset behavior**
+   - Reset must restore the full U.S. map, default state colors, and all-location data view.
+   - Preserve manual zoom and pan controls.
+5. **Development documentation**
+   - Record this request and the implementation changes in `AGENT_LOG.md`.
+   - Document any problems, corrections, and limitations in `docs/EXPERIMENT_LOG.md`.
+
+### Workflow
+
+Work from the latest `main` branch on a new feature branch.
+
+Focus only on improving map navigation and highlighting. Do not implement additional analysis questions or unrelated redesigns.
+
+Keep verification lightweight to conserve tokens. Clearly report any functionality that was not tested.
+
+Do not merge changes into `main` without my approval.
+```
+
+- **Agent produced:** Branched `feature/map-selection-navigation` from latest `origin/main` (`0f6d505`). Added subtle selected-state styling and a shared animated map-fit helper. Campus bounds include all associated markers with padding; city views zoom closer. Reset clears state styling and restores the national view. Manual controls and existing calculations remain intact.
+- **Checked or changed:** JavaScript syntax and a lightweight Chromium smoke check: all 11 campus selections, selected marker bounds, state highlights, city/marker synchronization, sampled original statistics, reset during transitions, manual zoom/pan, Fit U.S., narrow-screen bounds, and reduced-motion selection. No runtime errors. No merge or production deployment.
