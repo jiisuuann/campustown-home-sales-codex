@@ -37,3 +37,29 @@
 - PASS: `git push -u origin development/part2-phase1-dashboard` succeeded on the first retry. Original commits `0f9b47d` and `2300c44` were preserved unchanged.
 - PASS: Opened PR #1 targeting `main`: https://github.com/jiisuuann/campustown-home-sales-codex/pull/1 . GitHub confirmed the PR is open and not merged.
 - Added this outcome and the retry prompt as a separate documentation commit. No website, dataset, dependency or workflow changes; no new implementation tests were needed or performed. No merge or production deployment was performed.
+
+## 2026-11-12 — State highlighting and zoom-to-selection
+
+### Implementation and decisions
+
+- Started `feature/map-selection-navigation` from fetched `origin/main` at `0f6d505` (merged Phase 1). Preserved the existing dashboard, datasets, calculation functions, dropdown behavior, and page layout.
+- Joined the dataset's state abbreviations to bundled geometry names with a mapping for all 11 states currently present. Selected states receive a muted green fill and outline; clearing selection removes the class.
+- All selection sources use the existing `render()` flow, which now also updates state highlighting and map framing. Fit projected marker bounds with 100 viewBox-unit padding; cap automatic campus zoom at 10x and city zoom at 14x. Manual zoom retains its 1–24x range.
+- Animate selection changes for 550 ms; honor reduced-motion preferences with zero-duration selection transitions. Interrupt previous map transitions before replacing them, including manual zoom actions, to avoid an old selection animation overriding a reset.
+- Global reset clears both filters, state highlighting and data selection, and returns to the U.S. view. The existing “Fit U.S.” control remains a viewport-only action: it retains filters and highlights.
+
+### Problems, corrections and limitations
+
+- No implementation or browser-check failures encountered. Prevented competing reset/selection animations by routing map movement through a shared interruptible transition helper instead of combining an immediate reset with an active transition.
+- State-code mapping covers the official dataset; extending the dataset to additional states requires extending that mapping.
+- Tight neighboring towns can still overlap on narrow screens at capped automatic zoom levels. Existing manual zoom and dropdown/town-list alternatives remain available; positions are never displaced.
+- Automatic framing fits town markers, not the entire highlighted state boundary. No new analysis questions or redesigns were introduced.
+
+### Lightweight verification
+
+- PASS: `node --check assets/dashboard.js` and `git diff --check`.
+- PASS: installed Chromium via Playwright; all 11 campuses highlight a state, automatically zoom, and keep selected markers inside padded bounds.
+- PASS: Urbana city selects Illinois at 14x; sampled Illinois/Urbana statistics remain 3,664 campus sales and $229,900 city median. Davis marker updates dropdowns, highlights California and zooms to 14x.
+- PASS: global reset and clearing campus restore identity transform, no state highlights and all-location data (35,442 sales). Reset during an active selection transition remains reset.
+- PASS: manual zoom, mouse drag pan, and viewport-only Fit U.S.; 390px viewport campus-marker bounds; reduced-motion city selection; no JavaScript page errors during the smoke check.
+- NOT TESTED: other browsers, physical touch/pinch gestures, comprehensive accessibility testing, production deployment. No full analytical revalidation needed because calculation code is unchanged.
