@@ -63,3 +63,31 @@
 - PASS: global reset and clearing campus restore identity transform, no state highlights and all-location data (35,442 sales). Reset during an active selection transition remains reset.
 - PASS: manual zoom, mouse drag pan, and viewport-only Fit U.S.; 390px viewport campus-marker bounds; reduced-motion city selection; no JavaScript page errors during the smoke check.
 - NOT TESTED: other browsers, physical touch/pinch gestures, comprehensive accessibility testing, production deployment. No full analytical revalidation needed because calculation code is unchanged.
+
+## 2026-11-12 — Phase 2: Price & Affordability
+
+### Scope and decisions
+
+- Read AGENTS.md and data description; fast-forward pulled the existing `feature/map-selection-navigation` branch (already current at `84468f3`). Continued on that branch; did not restart from main or rebuild the dashboard.
+- Added only Q1–Q4 below the existing price distribution. Existing map controls, selection state, state highlights and geographic zoom code are unchanged. The dashboard initializes a separate `price-analysis.js` module once with the official CSV rows.
+- Q1/Q3/Q4 compare all cities regardless of the overview map filters. Q2 owns its own university selector. The scope is stated above the question navigation, so independent filters cannot silently alter each other's comparison universe.
+- All price-based eligibility uses the established finite sale_price >= $1,000 rule. Retain high-price outliers, original transaction IDs, and text identifiers. Do not use unreliable home_type or deduplicate addresses.
+- Q1: inclusive budget; count qualifying transactions by city; qualifying percentage uses **all recorded transactions in that city** as denominator, including records excluded by the price rule. Show denominator, counts, percentage and exclusions. Slider is $0–$2m in $1,000 steps; a whole-dollar exact input supports values beyond the slider range without excluding expensive records. Reset to $400,000.
+- Q2: independent university selector, reset to the first alphabetical university. Bands are [0,1), [1,3), [3,5), [5,10), [10,infinity) straight-line miles. Require nonblank finite nonnegative distance and eligible price. Show median and eligible count for each band, including explicit no-data bands. Include an interactive-by-selection horizontal bar chart, exact table and exclusion count.
+- Q3: exact bedroom selector derived from actual nonnegative integer bedroom values, including unusually high reported counts; no arbitrary merging into “5+”. Reset to 3 bedrooms. Show each city's eligible sample size and median, lowest first. No minimum sample-size suppression; disclose small-sample limitations.
+- Q4: whole-square-foot minimum, inclusive; reset to 1,500 sq ft. Exclude blank, nonfinite or nonpositive living area. Calculate sale_price/living_area_sqft per transaction, then city medians. Show disjoint exclusion counts (price rule, invalid area, below minimum).
+- Ties use unrounded values and shared competition ranks, with alphabetical display tie-breaks. Highlight all tied leaders. Empty median groups stay visible/unranked; no false winner when no transactions qualify. Dollar medians display whole dollars; $/sq ft displays cents; percentages display one decimal.
+
+### Issues and corrections
+
+- Workflow discrepancy: user requested updating open PR #2, but GitHub reported it was already merged at 2026-11-12T18:06:10Z, before Phase 2 work. A merged PR cannot be reopened. Asked the user and received approval to open a new Phase 2 PR from the same branch. No merge was performed by the agent.
+- During implementation review, narrowed sticky-header styling to table column headers; row header cells remain in normal table flow. Also assigned the distance-band name (rather than its median) as that table's accessible row header.
+- Avoided a slider limited by the reported $81.51m extreme: retained a practical $0–$2m slider and provided an unrestricted exact budget input with an explicit range note. Exact budgets above the slider maximum remain active until changed or reset.
+- Blank/negative input must not show stale results: clear the affected result table and show a validation message. Existing dataset comparison and browser checks passed with no reported mismatches or runtime errors.
+
+### Verification and limitations
+
+- PASS: syntax/diff checks; independent Python csv/statistics reference against browser results for all table rows under four budgets, all 19 observed bedroom counts, four area thresholds and all 11 university distance-band tables. Reference generator is `scripts/verify_price_analysis.py`; output belongs under `work/` and is not served as analytical data.
+- PASS: question resets, exact budgets beyond slider range, slider updates, blank/negative/no-result controls, budget isolation from Q2–Q4, overview-map isolation from all questions, preserved state highlight and automatic zoom, 390px page overflow, and no browser page errors. Inspected budget desktop/mobile and distance desktop screenshots.
+- Limitations: recorded sales describe this collection, not current inventory or full affordability (income, interest, taxes and financing are not modeled). Retained outliers and small samples can change rankings. The area rule validates positive reported area but does not independently verify it. Q2 is descriptive, not causal. Narrow tables/charts scroll internally.
+- NOT TESTED: full cross-browser/accessibility audits, physical touch gestures, production deployment. Q5–Q12 and theme toggle remain out of scope.
