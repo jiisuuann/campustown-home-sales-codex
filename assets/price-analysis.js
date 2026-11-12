@@ -128,5 +128,5 @@ function initPriceAnalysis(source, {validPrice, townKey}) {
   el('bedroom-reset').onclick=()=>{el('bedroom-count').value=defaults.beds;renderBedrooms();};
   el('area-reset').onclick=()=>{el('minimum-area').value=defaults.area;renderArea();};
   renderBudget();renderDistance();renderBedrooms();renderArea();
-  document.querySelectorAll('.question-controls').forEach(control=>control.disabled=false);
+  document.querySelectorAll('#q1 .question-controls, #q2 .question-controls, #q3 .question-controls, #q4 .question-controls').forEach(control=>control.disabled=false);
 }

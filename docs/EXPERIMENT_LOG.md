@@ -93,3 +93,36 @@
 - NOT TESTED: full cross-browser/accessibility audits, physical touch gestures, production deployment. Q5–Q12 and theme toggle remain out of scope.
 
 Publication: pushed Phase 2 commit `f2d2f37` to the existing working branch and, with the user's approval, opened PR #3 targeting main: https://github.com/jiisuuann/campustown-home-sales-codex/pull/3 . GitHub confirmed it is open and unmerged. PR #2 remains the previously merged navigation change; no merge or production deployment was performed for Phase 2.
+
+## 2026-11-12 — Phase 3: Time and home characteristics (Q5–Q9)
+
+### Scope and implementation
+
+- Continued `feature/map-selection-navigation` at `ad83339`, pulled fast-forward (already up to date) and confirmed PR #3 was open. No restart from main, new PR, dataset edits or map redesign.
+- Added `market-analysis.js` initialized once from the same original CSV, using the shared price rule and city keys. New controls and resets are local to each question and independent of Q1–Q4 and map state. Reused existing panels, charts, table styling, layout and typography.
+- Q5: selected city, annual or quarterly calendar groups from UTC closing dates. Fill the period sequence between the city's earliest/latest recorded date; absent periods show no median and zero eligible transactions. Compute adjacent-period dollar changes only when both medians exist. The headline compares the first/last nonempty periods using unrounded medians. Default first alphabetic city and annual grouping.
+- Q6: optional city and inclusive price range (minimum required, blank maximum means unbounded). Compute arithmetic mean, median, absolute mean-minus-median difference, and count from the exact same transactions. Difference is calculated before rounding; retain upper outliers unless the user sets a maximum. Defaults all towns, $1,000 minimum, no maximum.
+- Q7: optional city and one of garage/basement/fireplace. Only literal `1` is With and `0` is Without; missing/unrecognized flags are a separate Not reported group with its own median and count. Report signed With-minus-Without median difference only when both groups have eligible sales. Default garage, all towns.
+- Q8: all towns and inclusive minimum/maximum living area, with optional unbounded maximum. Require finite positive area and positive integer construction year; exclude missing values. Construction groups: before 1940, 1940–1959, 1960–1979, 1980–1999, 2000–2019, 2020+. Report each group's median/count and the range of observed group medians. Default 1,500–2,500 sq ft.
+- Q9: one city and a year chosen from all dataset closing years. Count every transaction with a valid closing date in that city/year, regardless of price; render all 12 months, zero where no sales are recorded. Highlight all tied busiest months; no winner if the year has no records. Default first alphabetic city and latest observed year.
+
+### Data rules and interpretation
+
+- Q5–Q8 consistently apply finite sale_price >= $1,000, retaining high-price outliers. Q9 counts all dated transactions, consistent with the overview's all-sale count. No address deduplication, identifier coercion or property-type analysis.
+- Validate YYYY-MM-DD closing dates by UTC round-trip; blank/invalid dates are excluded, never assigned a fake month/year. Dataset date coverage is 2023-03-27 through 2026-03-25. City-specific first/last recorded dates and partial-coverage caveats are displayed in Q5/Q9. No assumption that periods with records represent complete market coverage.
+- Groups with 1–9 sales are labeled Small sample; zero groups say No sales and have no price statistic. Ten is a disclosure threshold, not a significance test; no observations are suppressed. Comparisons are descriptive, not causal. Q5 is not a repeat-sales index, Q7 is not a feature-installation valuation, and Q8 does not isolate building age from geography and other differences.
+- Price and dollar-change displays round to whole dollars; Q5 headline percentage change rounds to one decimal. All calculations use unrounded values. Q6 absolute difference need not equal the subtraction of two rounded display values.
+
+### Issues and corrections
+
+- Scope review found Phase 2's initialization enabled every `.question-controls` fieldset. Narrowed it to Q1–Q4 so Phase 3 controls remain disabled until their own data initialization completes; no Phase 2 analytical changes.
+- Prevented fractional tick labels in low-count monthly charts by retaining only integer count ticks. Empty/missing price groups are not drawn as zero-price bars.
+- Invalid/inverted ranges clear the affected table/chart and show a helpful input message instead of retaining stale analytical results. Blank maximum is explicitly supported as no limit.
+- No mismatches or JavaScript page errors were reported in the independent reference/browser verification. Visual review retained the existing design without additional CSS or dependencies.
+
+### Verification and remaining limits
+
+- PASS: syntax and whitespace checks; independent Python reference scenarios for all Q5–Q9 result rows; Chromium checks for missing/empty groups, small-sample flags, mean/median/difference/count, all 12 months and busiest-row count, invalid range handling, resets and question isolation; map highlighting; no 390px page overflow. Inspected desktop Q7 and mobile Q6 screenshots.
+- PASS: existing Phase 2 browser/reference smoke check after integration, including its map highlight/zoom checks.
+- NOT TESTED: every possible filter combination, physical touch gestures, other browsers, comprehensive accessibility and performance audits, live deployment. No new external data was used to assess collection completeness or verify reported home characteristics. Q10–Q12 remain deferred.
+- Changes are for the same open PR #3; no merge or production deployment was performed.

@@ -49,3 +49,27 @@ Additional PASS checks:
 - JavaScript syntax, no browser page errors, desktop/mobile budget screenshot inspection and desktop distance-chart inspection, no document overflow at 390px.
 
 NOT TESTED: exhaustive cross-browser, keyboard/screen-reader accessibility audit, physical touch/pinch, live deployment. No additional Level 2 questions implemented. Method details, exclusions, scope and limitations are recorded in EXPERIMENT_LOG.md and displayed in each panel.
+
+## 2026-11-12 — Phase 3 Q5–Q9
+
+Reference: `python scripts/verify_market_analysis.py` independently reads the official CSV using Python datetime/statistics and emits JSON for a local Chromium comparison. No generated analytical values are used by the website.
+
+| Check | Independently verified result | Status |
+|---|---|---|
+| Q5 Ann Arbor annual medians / eligible counts | 2023: $555,000 / 919; 2024: $571,000 / 909; 2025: $585,000 / 1,054; 2026: $564,000 / 138 | PASS |
+| Q6 all cities, price >= $1,000 | Mean 509437.91210000566; median 410000; absolute difference 99437.91210000566; n=35,438. UI rounds to $509,438 / $410,000 / $99,438 | PASS |
+| Q7 garage, all cities | With: $427,000 / 25,457; Without: $350,000 / 9,981; Not reported: no median / 0. With-minus-without difference +$77,000 | PASS |
+| Q8 all cities, 1,500–2,500 sq ft | Before 1940: $460,000 / 1,221; 1940–59: $410,000 / 1,975; 1960–79: $375,000 / 3,961; 1980–99: $401,000 / 3,175; 2000–19: $397,000 / 3,326; 2020+: $425,000 / 2,004 | PASS |
+| Q9 Ann Arbor 2023 monthly counts Jan–Dec | 0, 0, 14, 110, 145, 143, 119, 97, 71, 86, 74, 61. Busiest: May, 145. These are recorded counts, with partial coverage | PASS |
+
+Browser/reference scenarios (counts exact, monetary display tolerance at most half a dollar):
+
+- Q5 annual and quarterly tables for Ann Arbor, Pittsboro and Gainesville; all period medians/counts and sample flags.
+- Q6 all-city unbounded and $500k-capped ranges, Gainesville unbounded, and Pittsboro $1,000–$1,001 empty range; means, medians, absolute differences and counts.
+- Q7 garage, basement and fireplace for all towns and State College, including separate Not reported groups.
+- Q8 area ranges 0–unbounded, 1,500–2,500, 3,000–4,000 and 1 billion–unbounded (empty), including no-data groups and sample flags.
+- Q9 each of Ann Arbor, Pittsboro and Gainesville for 2023, 2025 and 2026; all month counts and highlighted maximum-count rows.
+
+PASS: blank/inverted required ranges clear results; all five reset controls restore defaults; Q5 changes do not affect Q6–Q9; Phase 3 scenarios leave Phase 2 unchanged; overview map selection leaves Phase 3 unchanged and retains 3 Illinois markers/state highlight. No runtime errors or 390px document overflow. Inspected desktop feature and mobile mean/median screenshots. Existing Phase 2 reference/browser check also passed again after integration.
+
+NOT TESTED: all other city/range combinations, direct automated assertions of every Q5 delta/percentage, every possible tied/no-sale monthly case, full keyboard/screen-reader audit, physical touch, other browsers, production deployment. Closing-date validation and UTC grouping are implemented; comprehensive malformed-date fixture tests were not added. Official dataset files remain unchanged.
