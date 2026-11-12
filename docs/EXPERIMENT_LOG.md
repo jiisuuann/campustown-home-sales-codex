@@ -26,3 +26,7 @@
 - Replaced the Part 1 interface; preserved original documentation, agent-log history, all five official datasets and Pages configuration.
 - Basic responsive layouts included. Advanced analytics, the 12 Level 2 questions, theme switching, and exhaustive browser/accessibility/performance testing are deferred.
 - See VALIDATION.md for checks actually performed. Review the branch/PR; main remains the existing live site until an approved merge.
+
+### Publication blocker
+
+- Git CLI push returned HTTP 403 (`Permission ... denied`). The connected GitHub app also returned HTTP 403 (`Resource not accessible by integration`) when attempting to create the same development branch. No remote branch or pull request could be published. The implementation is committed on the local development branch; repository write access is required to publish it for review. No approval-review rejection occurred; these were GitHub authorization failures.
