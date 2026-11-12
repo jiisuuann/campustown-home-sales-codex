@@ -75,3 +75,20 @@ WORKFLOW\
 - **Agent produced:** New presentation dashboard with geographic context, all 18 town markers using actual sale coordinates, campus/city/map synchronization, reset and zoom controls, data-derived summary cards, a price-band chart and accessible table, methodology notes, local version-pinned map/chart assets, and basic responsive styling. Added experiment and validation documentation. Deferred the 12 questions and theme toggle.
 - **Checked or changed:** JavaScript syntax, independent Python CSV totals and median, and lightweight Chromium interaction checks. Visual inspection caught tiny phone chart labels and markers; corrected chart scrolling and marker scaling. Playwright initially failed because its bundled browser was absent; corrected to use installed Chromium. Full results and limitations are in docs/VALIDATION.md. Official datasets and existing documentation remain unchanged. Work is on a separate development branch, with no merge or production deployment.
 - **Publication status:** Local commit completed. Both Git push and the connected GitHub app rejected branch publication with HTTP 403. No remote PR, merge or deployment was performed; repository write access is needed to publish the review branch.
+
+## 2026-11-12: Publish existing Phase 1 branch after access update
+
+**Asked (exact prompt):**
+
+```text
+I have updated the ChatGPT Codex Connector's GitHub repository access to include jiisuuann/campustown-home-sales-codex.\
+\
+Please retry publishing the existing Phase 1 work on development/part2-phase1-dashboard. Preserve the current implementation and commits. Do not regenerate or rewrite the website.\
+\
+Push the existing branch and open a pull request targeting main. Do not merge it.\
+\
+If access is still denied, report the exact error and stop without repeated retries. Record the outcome in docs/EXPERIMENT_LOG.md.
+```
+
+- **Agent produced:** Published the existing development branch and opened PR #1 targeting main. Preserved the website and original commits; appended publication records in a new documentation commit.
+- **Checked or changed:** Git push succeeded on its first retry. GitHub confirmed https://github.com/jiisuuann/campustown-home-sales-codex/pull/1 is open and unmerged. No implementation tests rerun; no merge or deployment performed.
