@@ -12,3 +12,46 @@ Rules:
 - After each change, tell me what you changed and how I can check it in my browser, on the live site or in the pull request. I don't install tools, run code or start a local server on my own computer, so don't ask me to.
 - Never put passwords, API keys or other secrets in any file.
 - .github/workflows/pages.yml publishes the repository's files to GitHub Pages, as they are, each time main is pushed. Only add a build step to it if we move to a framework that needs one.
+
+---
+
+## Part 2 Experiment Requirements
+
+This repository is used for the Codex experiment in the College-Town Home Sales Part 2 project.
+
+### Development Goals
+
+- Implement all 12 Level 2 analysis questions documented in `docs/REQUIREMENTS.md`.
+- Implement an interactive geographic map showing the college towns.
+- Synchronize map selections and campus/city dropdown selections in both directions.
+- Ensure map selections update relevant charts, tables, and numerical results.
+- Support responsive desktop, tablet, and mobile layouts.
+- Provide a functional light/dark theme toggle.
+
+### Data Accuracy
+
+- Use the official dataset and follow `docs/data_description_sheet.md`.
+- Do not invent analytical results.
+- Explicitly document missing-value handling, price thresholds, and calculation methods.
+- Use `listing_id` as the unique transaction identifier.
+- Never deduplicate transactions using street addresses.
+- Validate calculated answers against the original dataset.
+- Do not modify the five original dataset files.
+
+### Experiment Documentation
+
+- Record important agent prompts in `AGENT_LOG.md`, preserving the exact prompt text.
+- Record implementation problems, errors, corrective prompts, and resolutions in `docs/EXPERIMENT_LOG.md`.
+- Record question-specific calculations and verification results in `docs/VALIDATION.md`.
+- Clearly distinguish PASS, FAIL, and NOT TESTED.
+- Do not claim browser testing or successful deployment unless it was actually verified.
+- Document deviations from the initial implementation plan.
+
+### GitHub Workflow
+
+- Develop new features on separate branches.
+- Keep the main branch stable until changes are reviewed.
+- Open pull requests for review before merging.
+- Do not merge pull requests without explicit user approval.
+- Preserve GitHub Pages compatibility.
+- Do not introduce unnecessary dependencies or external services.
