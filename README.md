@@ -1,51 +1,60 @@
-# [Your site's title]
 
-## Start here (delete this section before you submit)
+# College-Town Home Sales — Part 2 (Codex Experiment)
 
-This repository is your starting point for the Home Sales case. It already holds the dataset, its description sheet, project instructions for your AI coding agent, and outlines of the README and agent log that the case asks for.
+## Project Overview
 
-1. **Turn on GitHub Pages.** In this repository, open **Settings**, then **Pages**. Under "Build and deployment," set **Source** to **GitHub Actions**. GitHub may suggest workflows to add. Skip them: this repository already has one, `.github/workflows/pages.yml`.
-2. **Publish for the first time.** Open the **Actions** tab, choose **Publish site to GitHub Pages** in the sidebar, click **Run workflow**, then click **Run workflow** again to confirm. If the tab already shows a failed run from when you created the repository, that's expected: Pages wasn't turned on yet. When the new run shows a green check, your site is at `https://your-username.github.io/your-repo-name/`. It shows a placeholder page until you replace `index.html`.
+This repository is part of a research experiment evaluating AI coding agents in the development of interactive data analytics websites.
 
-    From then on, every push to the main branch publishes the site within a few minutes. If the live site doesn't show a change, open the **Actions** tab. A red X means the publish failed, and the run's log says why.
-3. **Open the repository in your AI coding agent.** Its project instructions are in `AGENTS.md`. If your agent reads its instructions from a file with a different name, check its documentation and copy `AGENTS.md` to that name. Add to the instructions as you learn what your agent needs.
-4. **Read `docs/data_description_sheet.md`** before you ask the agent for any analysis.
-5. **Build in small steps,** as the setup guide describes. Add an entry to `AGENT_LOG.md` each time you work with the agent.
-6. **Fill in every section below** before you submit.
+The project builds on the completed Part 1 website and aims to develop an interactive dashboard that answers 12 Level 2 housing sales analysis questions.
 
-| Path | What it is |
-|---|---|
-| `index.html` | A placeholder page. Replace it with your site. |
-| `data/college_town_home_sales.csv` | The dataset, version 1.0: 35,442 rows. Your site reads this file. |
-| `data/college_town_home_sales.xlsx`, `.sqlite`, `.duckdb`, `.parquet` | The same data in Excel, SQLite, DuckDB and Parquet formats, with identical values |
-| `docs/data_description_sheet.md` | What every column means, and five problems in the data |
-| `AGENTS.md` | Project instructions for your AI coding agent |
-| `AGENT_LOG.md` | Your agent log |
-| `scripts/` | Scripts that make smaller data files for the site |
-| `.github/workflows/pages.yml` | Publishes the site to GitHub Pages each time you push to main. It publishes your files as they are. If you switch to a framework that needs a build step, have your agent update it. |
+A parallel experiment using Claude Code will be conducted from the same starting codebase.
 
-Don't edit any of the five dataset files. Your site needs only the CSV file. The other formats make it easier to check numbers a second way, for example with a pivot table in Excel or a SQL query on the SQLite file. In SQLite and DuckDB, the table is named `home_sales`.
+## Project Goals
 
-## What this site is for
+1. Answer all 12 Level 2 analysis questions using the official college-town home sales dataset.
+2. Implement a geographic map filter with bidirectional synchronization between map selections and campus/city dropdowns.
+3. Support responsive layouts for desktop, tablet, and mobile devices.
+4. Implement a light/dark theme toggle.
+5. Validate analytical results against the source dataset.
+6. Document AI agent prompts, errors, corrections, and verification results.
 
-_Replace this line with your site's question and audience, or a short description of the site._
+## Dataset
 
-## Live site
+- Source: College-Town Home Sales Dataset, Version 1.0
+- Records: 35,442 home sales
+- Coverage: 18 cities and towns, 11 universities, 11 states
+- Primary file: `data/college_town_home_sales.csv`
+- Data documentation: `docs/data_description_sheet.md`
 
-https://your-username.github.io/your-repo-name/
+The original dataset files must not be modified.
 
-## Data notes
+## Development Workflow
 
-_Replace this line. Say which rows you left out and why, and how each figure on the site is defined. "Five things that will bite you" in the description sheet lists the problems to cover._
+- AI coding agent: OpenAI Codex Cloud
+- Work in small development cycles.
+- Review changes before merging pull requests.
+- Keep the main branch stable until changes have been reviewed.
+- Record prompts and outcomes in `AGENT_LOG.md`.
+- Record issues and resolutions in `docs/EXPERIMENT_LOG.md`.
+- Maintain analytical validation results in `docs/VALIDATION.md`.
 
-## Tools we used
+## Project Documentation
 
-_Replace this line with your AI coding agent or agents, and any libraries and other tools you used._
+- `AGENTS.md` — Coding agent instructions
+- `AGENT_LOG.md` — Agent prompts and work history
+- `docs/data_description_sheet.md` — Dataset documentation
+- `docs/REQUIREMENTS.md` — Analysis questions and UI requirements
+- `docs/EXPERIMENT_LOG.md` — Issues, fixes, and observations
+- `docs/VALIDATION.md` — Analytical verification results
 
-## Citation
+Documentation files will be added or updated as development progresses.
 
-College-town home sales dataset, version 1.0 (2026). University of Illinois-Deloitte Foundation Center for Business Emerging Technologies. Data collected March 2026.
+## Website
 
-## Who did what
+https://jiisuuann.github.io/campustown-home-sales-codex/
 
-_For teams: replace this line with each member's name and what they did. If you worked alone, delete this section._
+## Attribution
+
+College-town home sales dataset, Version 1.0 (2026).
+University of Illinois–Deloitte Foundation Center for Business Emerging Technologies.
+Data collected March 2026.
