@@ -136,3 +136,112 @@ Do not merge changes into `main` without my approval.
 
 - **Agent produced:** Branched `feature/map-selection-navigation` from latest `origin/main` (`0f6d505`). Added subtle selected-state styling and a shared animated map-fit helper. Campus bounds include all associated markers with padding; city views zoom closer. Reset clears state styling and restores the national view. Manual controls and existing calculations remain intact.
 - **Checked or changed:** JavaScript syntax and a lightweight Chromium smoke check: all 11 campus selections, selected marker bounds, state highlights, city/marker synchronization, sampled original statistics, reset during transitions, manual zoom/pan, Fit U.S., narrow-screen bounds, and reduced-motion selection. No runtime errors. No merge or production deployment.
+
+## 2026-11-12: Phase 2 — Price & Affordability (Q1–Q4)
+
+**Asked (exact development prompt):**
+
+```text
+Continue developing the College-Town Home Sales Part 2 dashboard.
+
+**Repository:** `jiisuuann/campustown-home-sales-codex`\
+**Working branch:** `feature/map-selection-navigation`
+
+Use the latest version of the working branch, which includes state highlighting and automatic geographic zoom. Do not restart from `main` or rebuild the dashboard.
+
+## Phase 2 — Price & Affordability
+
+Implement interactive features that answer the first four Level 2 analysis questions.
+
+**Q1. Which college town has the largest number of recorded home sales within a selected budget?**
+
+- Add a budget slider.
+- Show a ranked table of cities with qualifying sale counts and qualifying percentages.
+- Clearly identify the city with the largest number of qualifying sales.
+
+**Q2. How does the median sale price vary with distance from campus?**
+
+- Allow users to select a university.
+- Group sales into clear distance bands.
+- Display median sale price and sale count for each band.
+- Use a bar chart or another appropriate visualization.
+
+**Q3. Which city has the lowest median sale price for homes with a selected number of bedrooms?**
+
+- Add a bedroom-count selector.
+- Rank cities by median sale price.
+- Display median prices and qualifying sale counts.
+- Highlight the city with the lowest median.
+
+**Q4. Which city has the lowest median sale price per square foot for homes meeting a selected minimum living-area requirement?**
+
+- Add a minimum living-area control.
+- Calculate price per square foot for each eligible transaction before computing city medians.
+- Exclude missing or zero living-area values.
+- Show a ranked city table with median price per square foot and qualifying sale counts.
+
+## UI Requirements
+
+- Integrate the new analysis into the existing presentation-style dashboard.
+- Reuse the current design and navigation patterns.
+- Keep the geographic map, dropdown synchronization, state highlighting, and automatic zoom fully functional.
+- Use intuitive controls, interactive charts, and clearly labeled numerical answers.
+- Allow users to reset question-specific filters.
+- Ensure that each question has its own controls so one question's filters do not unintentionally alter another question's results.
+- Do not implement the remaining Level 2 questions yet.
+
+## Data & Documentation
+
+- Read `AGENTS.md` and `docs/data_description_sheet.md`.
+- Use the official CSV without modifying source data.
+- Apply documented data-quality rules consistently.
+- Do not hardcode analytical answers.
+- Append this prompt and implementation summary to `AGENT_LOG.md`.
+- Update `docs/EXPERIMENT_LOG.md` with issues and corrections.
+
+## Workflow
+
+- Continue on `feature/map-selection-navigation`.
+- Keep the existing PR #2 open.
+- Commit and push Phase 2 changes to that branch so PR #2 updates automatically.
+- Do not merge into
+```
+
+**Clarification:** GitHub reported that PR #2 had already been merged before this phase. Asked whether to open a new Phase 2 PR from the same branch; the user replied exactly: `Open a new Phase 2 PR`.
+
+- **Agent produced:** Four independent question sections: budget slider plus exact budget input and city count/percentage ranking; university distance-band median chart/table; exact-bedroom city median ranking; minimum-area city median transaction-level price-per-square-foot ranking. Added question resets, computed answer callouts, ties/empty states, exclusions, accessible tables and responsive controls. Continued the existing branch without rebuilding or changing map logic. Q5–Q12 remain deferred.
+- **Checked or changed:** Independent Python reference computations matched browser results across four budgets, all reported bedroom values, four area thresholds and all 11 campuses. Tested invalid/no-result inputs, resets, slider/map independence, state highlighting and autozoom, mobile page overflow, and no page errors. Inspected desktop/mobile budget screenshots and desktop distance chart. Data files unchanged. Details in docs/VALIDATION.md and docs/EXPERIMENT_LOG.md; no merge or production deployment performed.
+
+## 2026-11-12: Phase 3 — Q5–Q9 market patterns
+
+**Asked (exact prompt):**
+
+```text
+Continue the College-Town Home Sales Part 2 dashboard from the current feature/map-selection-navigation branch, including all Phase 2 changes in PR #3. Do not restart from main or rebuild existing features.\
+\
+Implement Phase 3, covering Level 2 questions Q5–Q9:\
+\
+Q5. Show how median sale prices change by year or quarter for a selected city. Include transaction counts.\
+Q6. Compare the mean and median sale prices for a selected city or price range, including the absolute difference and qualifying sale count.\
+Q7. Compare median sale prices for homes with and without a garage, basement, or fireplace. Show each group's sale count and price difference.\
+Q8. Compare median sale prices by construction-year group within a selected living-area range, including group counts.\
+Q9. Show monthly sale counts for a selected city and year, and clearly identify the busiest month.\
+\
+Requirements:\
+\- Preserve the existing dashboard, geographic map, Phase 2 functionality, and design.\
+\- Use separate question-specific controls and resets.\
+\- Display clear numerical answers as well as appropriate charts or tables.\
+\- Calculate every result from the official CSV and follow docs/data_description_sheet.md.\
+\- Handle missing values, empty results, and small samples explicitly.\
+\- Keep the presentation-style dashboard visually consistent.\
+\- Append the exact prompt and work summary to AGENT_LOG.md.\
+\- Update docs/EXPERIMENT_LOG.md and docs/VALIDATION.md.\
+\- Keep testing lightweight; report anything not tested.\
+\- Commit and push to feature/map-selection-navigation so the open PR #3 updates automatically.\
+\- Do not create another PR or merge into main.\
+\
+At the end, summarize the implemented features and known limitations.
+```
+
+- **Agent produced:** Added independent Q5–Q9 panels using the existing visual styles: city/year-or-quarter median prices and counts, mean/median/range comparison, garage/basement/fireplace groups with missing flags separate, construction-year groups within an inclusive living-area range, and monthly city/year counts with tied busiest months. Each panel has a reset, computed numerical answer, exact table, exclusions and small-sample handling; Q5/Q7/Q8/Q9 also have bar charts. Preserved Phase 2 and map logic on the existing feature branch.
+- **Checked or changed:** Read project/data guidance, confirmed PR #3 remained open, and pulled the working branch without restarting. Independent Python CSV/statistics comparisons and a lightweight Chromium pass verified representative Phase 3 scenarios, missing/empty groups, count/median outputs, resets, invalid ranges, question isolation, existing map highlights and mobile overflow. Re-ran the existing Phase 2 smoke check successfully. Inspected desktop feature-comparison and mobile mean/median views. Full results and limitations are in docs/VALIDATION.md. No new PR or merge.

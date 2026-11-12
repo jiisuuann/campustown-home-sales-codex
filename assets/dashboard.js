@@ -132,6 +132,8 @@ async function init() {
     $('reset').onclick=()=>{selection.campus='';selection.city='';render();};
     render();
     ['campus','city','reset'].forEach(id=>$(id).disabled=false);
+    initPriceAnalysis(rows, {validPrice, townKey});
+    initMarketAnalysis(rows, {validPrice, townKey});
     $('status').textContent='';
   } catch(error) {
     $('status').textContent=`Unable to load dashboard: ${error.message} Reload the page to retry.`;
